@@ -1,4 +1,4 @@
-export DOTFILES=$HOME/.dotfiles
+export DOTFILES=$HOME/Documents/dotfiles
 export ZSH=$DOTFILES/zsh
 
 command_exists() {
@@ -14,7 +14,7 @@ export REPORTTIME=10
 # define the code directory
 # This is where my code exists and where I want the `c` autocomplete to work from exclusively
 if [[ -d ~/code ]]; then
-    export CODE_DIR=~/code
+    export CODE_DIR=~/
 fi
 
 # source all .zsh files inside of the zsh/ directory
@@ -31,6 +31,7 @@ compinit
 
 for config ($ZSH/**/*completion.sh) source $config
 
+export TERM="screen-256color"
 export EDITOR='nvim'
 export GIT_EDITOR='nvim'
 

@@ -1,0 +1,13 @@
+git
+python3
+tmux
+tree
+diff-so-fancy
+fzf
+nvm
+wget
+vim
+z
+zsh
+zsh-autosuggestions
+zsh-syntax-highlighting

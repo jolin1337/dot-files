@@ -1,11 +1,11 @@
 # gitconfig
 [user]
-    name = Nick Nisi
-    email = nick@nisi.org
+    name = Johannes Lindén
+    email = johannes.93.1337@gmail.com
 [github]
-    user = nicknisi
+    user = johlin1337
 [init]
-    templatedir = ~/.dotfiles/git/templates
+    templatedir = ~/Documents/dotfiles/git/templates
 [alias]
     # list all aliases
     la = "!git config -l | grep alias | cut -c 7-"

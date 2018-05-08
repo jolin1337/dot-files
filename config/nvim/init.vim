@@ -15,7 +15,8 @@ call plug#begin('~/.config/nvim/plugged')
 	abbr attribtue attribute
 	abbr attribuet attribute
 
-	set autoread " detect when a file is changed
+	" set autoread " detect when a file is changed
+  set autoread | au CursorHold * checktime | call feedkeys("lh")
 
 	set history=1000 " change history to 1000
 	set textwidth=120
@@ -80,9 +81,9 @@ call plug#begin('~/.config/nvim/plugged')
 	" Tab control
 	set noexpandtab " insert tabs rather than spaces for <Tab>
 	set smarttab " tab respects 'tabstop', 'shiftwidth', and 'softtabstop'
-	set tabstop=4 " the visible width of tabs
-	set softtabstop=4 " edit as if the tabs are 4 characters wide
-	set shiftwidth=4 " number of spaces to use for indent and unindent
+	set tabstop=2 " the visible width of tabs
+	set softtabstop=2 " edit as if the tabs are 4 characters wide
+	set shiftwidth=2 " number of spaces to use for indent and unindent
 	set shiftround " round indent to a multiple of 'shiftwidth'
 
 	" code folding settings
@@ -119,6 +120,7 @@ call plug#begin('~/.config/nvim/plugged')
 	" Load colorschemes
 	Plug 'chriskempson/base16-vim'
 	Plug 'joshdick/onedark.vim'
+    Plug 'dracula/vim'
 
 	" Airline {{{
 		Plug 'vim-airline/vim-airline'
@@ -229,8 +231,8 @@ call plug#begin('~/.config/nvim/plugged')
 	let g:silent_custom_command = 0
 
 	" helpers for dealing with other people's code
-	nmap \t :set ts=4 sts=4 sw=4 noet<cr>
-	nmap \s :set ts=4 sts=4 sw=4 et<cr>
+	nmap \t :set ts=2 sts=2 sw=2 noet<cr>
+	nmap \s :set ts=2 sts=2 sw=2 et<cr>
 
 	nnoremap <silent> <leader>u :call functions#HtmlUnEscape()<cr>
 
@@ -249,6 +251,7 @@ call plug#begin('~/.config/nvim/plugged')
 		autocmd BufWritePost .vimrc.local source %
 		" save all files on focus lost, ignoring warnings about untitled buffers
 		autocmd FocusLost * silent! wa
+		autocmd BufWritePre * :%s/\s\+$//e
 
 		" make quickfix windows take all the lower section of the screen
 		" when there are multiple windows open
@@ -300,6 +303,9 @@ call plug#begin('~/.config/nvim/plugged')
 	" extended % matching
 	Plug 'vim-scripts/matchit.zip'
 
+	" multiple cursors
+  Plug 'terryma/vim-multiple-cursors'
+
 	" detect indent style (tabs vs. spaces)
 	Plug 'tpope/vim-sleuth'
 
@@ -321,7 +327,7 @@ call plug#begin('~/.config/nvim/plugged')
 		function! ToggleNerdTree()
 			if @% != "" && (!exists("g:NERDTree") || (g:NERDTree.ExistsForTab() && !g:NERDTree.IsOpen()))
 				:NERDTreeFind
-			else 
+			else
 				:NERDTreeToggle
 			endif
 		endfunction
@@ -521,7 +527,8 @@ call plug#end()
 	else
 		let g:onedark_termcolors=16
 		let g:onedark_terminal_italics=1
-		colorscheme onedark
+		" colorscheme onedark
+		colorscheme dracula
 	endif
 	syntax on
 	filetype plugin indent on

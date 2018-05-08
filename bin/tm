@@ -16,7 +16,12 @@ do
 	case $opt in
 		"New Session")
 			read -p "Enter new session name: " SESSION_NAME
-			tmux new -s "$SESSION_NAME"
+			SESSIONS_DIR=~/.dotfiles/sessions
+			if [ -f $SESSIONS_DIR/$SESSION_NAME ]; then
+			      tmux new-session -s "$SESSION_NAME" "tmux source-file $SESSIONS_DIR/$SESSION_NAME"
+			else
+			      tmux new -s "$SESSION_NAME"
+			fi
 			break
 			;;
 		"zsh")

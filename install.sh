@@ -4,33 +4,30 @@ command_exists() {
     type "$1" > /dev/null 2>&1
 }
 
+package_manager=apt-get
+# only perform macOS-specific install
+if [ "$(uname)" == "Darwin" ]; then
+  package_manager=brew
+fi
+
 echo "Installing dotfiles."
 
 echo "Initializing submodule(s)"
 git submodule update --init --recursive
 
+echo "Installing packages"
+while read -r line; do
+  $package_manager install $line
+done < "install/packages.txt"
+
 source install/link.sh
 
-source install/git.sh
-
-# only perform macOS-specific install
 if [ "$(uname)" == "Darwin" ]; then
-    echo -e "\n\nRunning on OSX"
-
-    source install/brew.sh
-
-    source install/osx.sh
+  source install/brew.sh
+  source install/osx.sh
 fi
 
-echo "creating vim directories"
+echo "create vim directories"
 mkdir -p ~/.vim-tmp
-
-if ! command_exists zsh; then
-    echo "zsh not found. Please install and then re-run installation scripts"
-    exit 1
-elif ! [[ $SHELL =~ .*zsh.* ]]; then
-    echo "Configuring zsh as default shell"
-    chsh -s $(which zsh)
-fi
 
 echo "Done. Reload your terminal."
