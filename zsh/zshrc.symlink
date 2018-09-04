@@ -1,4 +1,4 @@
-export DOTFILES=$HOME/Documents/dotfiles
+export DOTFILES=$HOME/.dotfiles
 export ZSH=$DOTFILES/zsh
 
 command_exists() {
@@ -31,7 +31,7 @@ compinit
 
 for config ($ZSH/**/*completion.sh) source $config
 
-export TERM="screen-256color"
+export TERM="xterm"
 export EDITOR='nvim'
 export GIT_EDITOR='nvim'
 
@@ -50,7 +50,7 @@ if [[ -d ~/bin ]]; then
     export PATH=~/bin:$PATH
 fi
 
-[ -z "$TMUX" ] && export TERM=xterm-256color-italic
+[ -z "$TMUX" ] && export TERM=xterm # xterm-256color-italic
 
 # install rbenv
 if command_exists rbenv; then
@@ -79,5 +79,7 @@ BASE16_SHELL=$HOME/.config/base16-shell/
 if command_exists brew; then
     source `brew --prefix`/share/zsh-autosuggestions/zsh-autosuggestions.zsh
     source `brew --prefix`/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+else
+    source $ZSH/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
-source /Users/johlin/.rvm/scripts/rvm
+source $HOME/.rvm/scripts/rvm

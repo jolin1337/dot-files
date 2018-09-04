@@ -3,6 +3,7 @@ npm-debug.log
 
 plug.vim.old
 
+zsh/zsh-autosuggestions/
 config/nvim/spell
 config/nvim/shada
 config/nvim/plugged

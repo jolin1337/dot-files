@@ -65,12 +65,12 @@ __powerline() {
             readonly PS_SYMBOL=$PS_SYMBOL_OTHER
     esac
 
-    __git_info() { 
+    __git_info() {
         [ -x "$(which git)" ] || return    # git not found
 
         local git_eng="env LANG=C git"   # force git output in English to make our work easier
         # get current branch name or short SHA1 hash for detached head
-        local branch="$($git_eng symbolic-ref --short HEAD 2>/dev/null || $git_eng describe --tags --always 2>/dev/null)"
+        local branch="$( $git_eng symbolic-ref --short HEAD 2>/dev/null || $git_eng describe --tags --always 2>/dev/null )"
         [ -n "$branch" ] || return  # git branch not found
 
         local marks
@@ -89,9 +89,9 @@ __powerline() {
         printf " $GIT_BRANCH_SYMBOL$branch$marks "
     }
 
-    ps1() {
+    prompt() {
         # Check the exit code of the previous command and display different
-        # colors in the prompt accordingly. 
+        # colors in the prompt accordingly.
         if [ $? -eq 0 ]; then
             local FG_EXIT="$FG_BASE1"
             local BG_EXIT="$BG_CYAN"
@@ -103,19 +103,21 @@ __powerline() {
         fi
         local GIT_INFO="$(__git_info)"
 
-        PS1="$BG_EXIT$FG_EXIT \w$RESET"
-        PS1+="$BG_EXIT$FG_EXIT \j⚑ $RESET"
+        echo $GIT_INFO
+        CMD="$BG_EXIT$FG_EXIT \w$RESET"
+        CMD+="$BG_EXIT$FG_EXIT \j⚑ $RESET"
 
         if [[ "$GIT_INFO" != "" ]]; then
-            PS1+="$IFG_EXIT$BG_VIOLET$PS_SYMBOL$RESET"
-            PS1+="$BG_VIOLET$GIT_INFO$RESET"
-            PS1+="$FG_VIOLET$PS_SYMBOL$RESET "
+            CMD+="$IFG_EXIT$BG_VIOLET$PS_SYMBOL$RESET"
+            CMD+="$BG_VIOLET$GIT_INFO$RESET"
+            CMD+="$FG_VIOLET$PS_SYMBOL$RESET "
         else
-            PS1+="$IFG_EXIT$PS_SYMBOL$RESET "
+            CMD+="$IFG_EXIT$PS_SYMBOL$RESET "
         fi
+        export PS1=$CMD
     }
 
-    PROMPT_COMMAND=$PS1
+    prompt
 }
 
 __powerline

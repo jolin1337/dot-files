@@ -1,35 +1,40 @@
-#!/bin/sh
+#!/bin/bash
 
 # abort if we're already inside a TMUX session
-[ "$TMUX" == "" ] || exit 0
+if [ "$TMUX" != "" ]; then
+  exit 0
+fi
 # startup a "default" session if non currently exists
 # tmux has-session -t _default || tmux new-session -s _default -d
 
 # present menu for user to choose which workspace to open
 PS3="Please choose your session: "
-options=($(tmux list-sessions -F "#S" 2>/dev/null) "New Session" "zsh")
+sessions=$(tmux list-sessions -F "#S" 2>/dev/null)
+options=($sessions "New Session" "zsh")
 echo "Available sessions"
 echo "------------------"
 echo " "
 select opt in "${options[@]}"
 do
-	case $opt in
-		"New Session")
-			read -p "Enter new session name: " SESSION_NAME
-			SESSIONS_DIR=~/.dotfiles/sessions
-			if [ -f $SESSIONS_DIR/$SESSION_NAME ]; then
-			      tmux new-session -s "$SESSION_NAME" "tmux source-file $SESSIONS_DIR/$SESSION_NAME"
-			else
-			      tmux new -s "$SESSION_NAME"
-			fi
-			break
-			;;
-		"zsh")
-			zsh --login
-			break;;
-		*)
-			tmux attach-session -t $opt
-			break
-			;;
-	esac
+  case $opt in
+    "New Session")
+      read -p "Enter new session name: " SESSION_NAME
+      SESSIONS_DIR=~/.dotfiles/sessions
+      if [ -f $SESSIONS_DIR/$SESSION_NAME ]; then
+            echo "Starting new session \"$SESSION_NAME\" from file"
+            tmux new-session -s "$SESSION_NAME" "tmux source-file $SESSIONS_DIR/$SESSION_NAME"
+      else
+            echo "Starting new session \"$SESSION_NAME\""
+            tmux new -s "$SESSION_NAME"
+      fi
+      break
+      ;;
+    "zsh")
+      zsh --login
+      break;;
+    *)
+      tmux attach-session -t $opt
+      break
+      ;;
+  esac
 done

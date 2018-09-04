@@ -11,6 +11,48 @@ zstyle ':vcs_info:git*' actionformats ' %b|%a' 'x%R'
 
 autoload colors && colors
 
+PROMPT_SYMBOL='' #'❯'
+
+
+bg_to_fg_color() {
+    local color=$1
+    echo ${${color/K/F}/k/f}
+}
+fg_to_bg_color() {
+    local color=$1
+    echo ${${color/F/K}/f/k}
+}
+local FG_BLUE="%F{4}text%f"
+local BG_BLUE="`fg_to_bg_color $FG_BLUE`"
+local FG_GREEN="%F{green}text%f"
+local BG_GREEN="`fg_to_bg_color $FG_GREEN`"
+local FG_GREY="%F{red}text%f"
+local BG_GREY="`fg_to_bg_color $FG_RED`"
+local FG_RED="%F{red}text%f"
+local BG_RED="`fg_to_bg_color $FG_RED`"
+local FG_WHITE="%F{white}text%f"
+local BG_WHITE="`fg_to_bg_color $FG_WHITE`"
+local FG_BLACK="%F{black}text%f"
+local BG_BLACK="`fg_to_bg_color $FG_BLACK`"
+
+
+powerline_arrow() {
+    local text=$1
+    local FG_COLOR=$2
+    local BG_COLOR=$3
+    local BG_NEXT=${4:-text}
+    if (( $# == 1 ));then
+        echo "$1 $PROMPT_SYMBOL"
+    elif (( $# == 2 )); then
+        echo "${FG_COLOR/text/$text $PROMPT_SYMBOL}"
+    else
+        local fg_text=${FG_COLOR/text/$text}
+        local FG_BG_COLOR=`bg_to_fg_color $BG_COLOR`
+        local fg_prompt_symbol=${FG_BG_COLOR/text/$PROMPT_SYMBOL}
+        echo "%B${BG_COLOR/text/ $fg_text }${BG_NEXT/text/$fg_prompt_symbol}%b"
+    fi
+}
+
 git_dirty() {
     # check if we're in a git repo
     command git rev-parse --is-inside-work-tree &>/dev/null || return
@@ -36,21 +78,18 @@ upstream_branch() {
 # If there are changes that have been committed but not yet pushed, display a ⇡
 git_arrows() {
     # do nothing if there is no upstream configured
-    command git rev-parse --abbrev-ref @'{u}' &>/dev/null || return
+    local branch="$( git symbolic-ref --short HEAD 2>/dev/null || git describe --tags --always 2>/dev/null )"
+    [ -n "$branch" ] || return  # git branch not found
 
-    local arrows=""
+    local arrows="$branch"
+
+    # how many commits local branch is ahead/behind of remote?
     local status
-    arrow_status="$(command git rev-list --left-right --count HEAD...@'{u}' 2>/dev/null)"
-
-    # do nothing if the command failed
-    (( !$? )) || return
-
-    # split on tabs
-    arrow_status=(${(ps:\t:)arrow_status})
-    local left=${arrow_status[1]} right=${arrow_status[2]}
-
-    (( ${right:-0} > 0 )) && arrows+="%F{011}⇣%f"
-    (( ${left:-0} > 0 )) && arrows+="%F{012}⇡%f"
+    local stat="$(git status --porcelain --branch | grep '^##' | grep -o '\[.\+\]$')"
+    local aheadN="$(echo $stat | grep -o 'ahead [[:digit:]]\+' | grep -o '[[:digit:]]\+')"
+    local behindN="$(echo $stat | grep -o 'behind [[:digit:]]\+' | grep -o '[[:digit:]]\+')"
+    [ -n "$aheadN" ] && arrows+="%F{011}⇣ $aheadN%f"
+    [ -n "$behindN" ] && arrows+="%F{011}⇡ $behindN%f"
 
     echo $arrows
 }
@@ -68,12 +107,16 @@ suspended_jobs() {
     fi
 }
 
-precmd() {
-    vcs_info
-    print -P '\n%F{6}%~'
-}
+# precmd() {
+#     vcs_info
+#     print -P '\n%F{6}%~'
+# }
 
-PROMPT_SYMBOL='❯'
-
-export PROMPT="%(?.%F{207}.%F{160})$PROMPT_SYMBOL%f "
-export RPROMPT="`git_dirty`%F{241}$vcs_info_msg_0_%f`git_arrows``suspended_jobs`"
+# export PROMPT="%(?.%F{207}.%F{160})%t $PROMPT_SYMBOL%f "
+PROGRAMS='$(git_dirty)%F{241} $vcs_info_msg_0_%f $(git_arrows) $(suspended_jobs)'
+error_line="%(?..`powerline_arrow %? $FG_WHITE $BG_RED $BG_BLUE`)"
+time_line="`powerline_arrow %T $FG_WHITE $BG_BLUE $BG_BLACK`"
+path_line="`powerline_arrow %3d $FG_WHITE $BG_GREEN`"
+programs_line="`powerline_arrow "$PROGRAMS" $FG_WHITE $BG_BLACK $BG_GREEN`"
+export PROMPT="$error_line$time_line$programs_line$path_line "
+# export RPROMPT='$(git_dirty)%F{241} $vcs_info_msg_0_%f $(git_arrows) $(suspended_jobs)'

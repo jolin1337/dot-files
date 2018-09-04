@@ -17,9 +17,10 @@ git submodule update --init --recursive
 
 echo "Installing packages"
 while read -r line; do
-  $package_manager install $line
+  sudo $package_manager install -y $line
 done < "install/packages.txt"
 
+source install/zsh-autocompletion.sh
 source install/link.sh
 
 if [ "$(uname)" == "Darwin" ]; then
