@@ -16,7 +16,7 @@ call plug#begin('~/.config/nvim/plugged')
 	abbr attribuet attribute
 
 	" set autoread " detect when a file is changed
-  set autoread | au CursorHold * checktime | call feedkeys("lh")
+	set autoread | au CursorHold * checktime | call feedkeys("lh")
 
 	set history=1000 " change history to 1000
 	set textwidth=120
@@ -251,6 +251,7 @@ call plug#begin('~/.config/nvim/plugged')
 		autocmd BufWritePost .vimrc.local source %
 		" save all files on focus lost, ignoring warnings about untitled buffers
 		autocmd FocusLost * silent! wa
+		autocmd CursorHold,CursorHoldI * update
 		autocmd BufWritePre * :%s/\s\+$//e
 
 		" make quickfix windows take all the lower section of the screen
@@ -304,7 +305,7 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'vim-scripts/matchit.zip'
 
 	" multiple cursors
-  Plug 'terryma/vim-multiple-cursors'
+	Plug 'terryma/vim-multiple-cursors'
 
 	" detect indent style (tabs vs. spaces)
 	Plug 'tpope/vim-sleuth'
