@@ -42,14 +42,14 @@ powerline_arrow() {
     local BG_COLOR=$3
     local BG_NEXT=${4:-text}
     if (( $# == 1 ));then
-        echo "$1 $PROMPT_SYMBOL"
+        echo -n "$1 $PROMPT_SYMBOL"
     elif (( $# == 2 )); then
-        echo "${FG_COLOR/text/$text $PROMPT_SYMBOL}"
+        echo -n "${FG_COLOR/text/$text $PROMPT_SYMBOL}"
     else
         local fg_text=${FG_COLOR/text/$text}
         local FG_BG_COLOR=`bg_to_fg_color $BG_COLOR`
         local fg_prompt_symbol=${FG_BG_COLOR/text/$PROMPT_SYMBOL}
-        echo "%B${BG_COLOR/text/ $fg_text }${BG_NEXT/text/$fg_prompt_symbol}%b"
+        echo -n "%B${BG_COLOR/text/ $fg_text }${BG_NEXT/text/$fg_prompt_symbol}%b"
     fi
 }
 
@@ -107,10 +107,9 @@ suspended_jobs() {
     fi
 }
 
-# precmd() {
-#     vcs_info
-#     print -P '\n%F{6}%~'
-# }
+precmd() {
+#    print "$( battery_indicator.sh )"
+}
 
 # export PROMPT="%(?.%F{207}.%F{160})%t $PROMPT_SYMBOL%f "
 PROGRAMS='$(git_dirty)%F{241} $vcs_info_msg_0_%f $(git_arrows) $(suspended_jobs)'
@@ -119,4 +118,5 @@ time_line="`powerline_arrow %T $FG_WHITE $BG_BLUE $BG_BLACK`"
 path_line="`powerline_arrow %3d $FG_WHITE $BG_GREEN`"
 programs_line="`powerline_arrow "$PROGRAMS" $FG_WHITE $BG_BLACK $BG_GREEN`"
 export PROMPT="$error_line$time_line$programs_line$path_line "
+export RPROMPT='$(battery_indicator.sh)'
 # export RPROMPT='$(git_dirty)%F{241} $vcs_info_msg_0_%f $(git_arrows) $(suspended_jobs)'
