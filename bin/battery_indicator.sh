@@ -28,6 +28,6 @@ if [[ "$(echo "$battery_percentage<33" | bc -l)" -eq 1 ]]; then
 elif [[ "$(echo "$battery_percentage<66" | bc -l)" -eq 1 ]]; then
   percentage_color='yellow'
 else
-  percentage_color='darkgreen'
+  percentage_color='green'
 fi
 echo "%F{green}$green_hearts%f%F{red}$red_hearts%f %F{$percentage_color}($battery_percentage %%)%f"
