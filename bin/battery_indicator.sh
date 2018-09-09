@@ -23,9 +23,9 @@ for i in `seq 1 $charged_slots`; do green_hearts="$green_hearts$HEART"; done
 if [[ $charged_slots -lt $total_slots ]]; then
   for i in `seq 1 $(echo "$total_slots-$charged_slots" | bc)`; do red_hearts="$red_hearts$HEART"; done
 fi
-if [[ "$(echo "$battery_percentage<33" | bc -l)" -eq 1 ]]; then
+if [[ "$(echo "$battery_percentage<20" | bc -l)" -eq 1 ]]; then
   percentage_color='red'
-elif [[ "$(echo "$battery_percentage<66" | bc -l)" -eq 1 ]]; then
+elif [[ "$(echo "$battery_percentage<70" | bc -l)" -eq 1 ]]; then
   percentage_color='yellow'
 else
   percentage_color='green'
