@@ -118,5 +118,5 @@ time_line="`powerline_arrow %T $FG_WHITE $BG_BLUE $BG_BLACK`"
 path_line="`powerline_arrow %3d $FG_WHITE $BG_GREEN`"
 programs_line="`powerline_arrow "$PROGRAMS" $FG_WHITE $BG_BLACK $BG_GREEN`"
 export PROMPT="$error_line$time_line$programs_line$path_line "
-export RPROMPT='$(battery_indicator.sh)'
+export RPROMPT='$(battery_indicator.sh 2>/dev/null)'
 # export RPROMPT='$(git_dirty)%F{241} $vcs_info_msg_0_%f $(git_arrows) $(suspended_jobs)'
