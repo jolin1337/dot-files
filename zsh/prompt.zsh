@@ -129,7 +129,7 @@ notification() {
     MINSECTIME=5
     if (( $_elapsed[-1] > $MINSECTIME )); then
         cmd=$(history | tail -n1)
-        notify-send "$_elapsed[-1]s to execute $cmd"
+        notify-send "$_elapsed[-1]s to execute $cmd" 2>/dev/null
     fi
 }
 

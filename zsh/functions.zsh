@@ -59,6 +59,12 @@ function gitexport(){
     git archive master | tar -x -C "$1"
 }
 
+function fif() {
+  regexp=$1
+  base_dir=$2 # .
+  find $base_dir -type f -exec grep -H $regexp {} \;
+}
+
 # get gzipped size
 function gz() {
     echo "orig size    (bytes): "

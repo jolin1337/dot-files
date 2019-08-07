@@ -1,5 +1,7 @@
 export DOTFILES=$HOME/.dotfiles
 export ZSH=$DOTFILES/zsh
+export LC_ALL=en_IN.UTF-8
+export LANG=en_IN.UTF-8
 
 command_exists() {
     type "$1" > /dev/null 2>&1
@@ -40,8 +42,8 @@ export GIT_EDITOR='nvim'
 
 export PATH=/usr/local/bin:$PATH
 export PATH="/home/johlin/.pyenv/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+eval "$(pyenv init -)" 2>/dev/null
+eval "$(pyenv virtualenv-init -)" 2>/dev/null
 
 # add /usr/local/sbin
 if [[ -d /usr/local/sbin ]]; then
