@@ -39,6 +39,9 @@ export EDITOR='nvim'
 export GIT_EDITOR='nvim'
 
 export PATH=/usr/local/bin:$PATH
+export PATH="/home/johlin/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
 
 # add /usr/local/sbin
 if [[ -d /usr/local/sbin ]]; then
@@ -69,6 +72,7 @@ fi
 if command_exists hub; then
     eval "$(hub alias -s)"
 fi
+alias wenv='env $(cat .env | grep -v "^\#" | xargs)'
 
 [ -s ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules}/*" 2> /dev/null'

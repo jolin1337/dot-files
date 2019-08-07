@@ -32,8 +32,9 @@ alias du='du -h -c' # calculate disk usage for a folder
 # Applications
 
 # IP addresses
-alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
-alias localip="ipconfig getifaddr en1"
+alias mip="ip monitor"
+alias rip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias lip="ipconfig getifaddr en1"
 alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
 
 # Flush Directory Service cache

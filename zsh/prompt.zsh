@@ -66,6 +66,15 @@ git_dirty() {
     fi
 }
 
+git_additions() {
+    command git rev-parse --is-inside-work-tree &>/dev/null || return
+    changes=$(git diff --shortstat master | sed -r 's/^ [0-9]+ files changed,|[a-z( ),]+//g') 2>/dev/null
+    [[ $changes ]] || return
+    additions=$(echo $changes | sed -r 's/([0-9]+)(\+).*/\1/g') 2>/dev/null
+    deletions=$(echo $changes | sed "s/$additions+\|-//g") 2>/dev/null
+    echo "%F{green}+$additions%f/%F{red}-$deletions%f"
+}
+
 upstream_branch() {
     remote=$(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)) 2>/dev/null
     if [[ $remote != "" ]]; then
@@ -107,12 +116,30 @@ suspended_jobs() {
     fi
 }
 
-precmd() {
-#    print "$( battery_indicator.sh )"
+# Store elapsed time of previous command
+preexec () {
+    (( $#_elapsed > 1000 )) && set -A _elapsed $_elapsed[-1000,-1]
+    typeset -ig _start=SECONDS
+}
+precmd () {
+    (( _start >= 0 )) && set -A _elapsed $_elapsed $(( SECONDS-_start ))
+    _start=-1
+}
+notification() {
+    MINSECTIME=5
+    if (( $_elapsed[-1] > $MINSECTIME )); then
+        cmd=$(history | tail -n1)
+        notify-send "$_elapsed[-1]s to execute $cmd"
+    fi
 }
 
+# precmd() {
+#     vcs_info
+#     print -P '\n%F{6}%~'
+# }
+
 # export PROMPT="%(?.%F{207}.%F{160})%t $PROMPT_SYMBOL%f "
-PROGRAMS='$(git_dirty)%F{241} $vcs_info_msg_0_%f $(git_arrows) $(suspended_jobs)'
+PROGRAMS='$(git_additions)%F{241} $vcs_info_msg_0_%f $(git_arrows) $(suspended_jobs) $(notification)'
 error_line="%(?..`powerline_arrow %? $FG_WHITE $BG_RED $BG_BLUE`)"
 time_line="`powerline_arrow %T $FG_WHITE $BG_BLUE $BG_BLACK`"
 path_line="`powerline_arrow %3d $FG_WHITE $BG_GREEN`"

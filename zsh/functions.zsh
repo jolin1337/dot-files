@@ -111,3 +111,22 @@ function extract() {
 fh() {
   print -z $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
 }
+
+
+function redis-url() {
+  # Get the first argument as the URL variable
+  url=$1
+  # Parse and generate the command: redis-cli -h [hostname] -p [port] -a [password]
+  cmd=`echo $url | sed 's_redis://\(.*\):\(.*\)@\(.*\):\(.*\)_redis-cli -h \3 -p \4 -a \2_'`
+  if [[ $cmd == $url ]]; then
+    cmd=`echo $url | sed 's_redis://\(.*\)_redis-cli -h \1_'`
+  fi
+  if [[ $cmd == $url ]]; then
+    echo $cmd
+    echo "Error: No valid redis url"
+    return 1
+  fi
+  echo $cmd
+  # Run the command
+  eval ${cmd}
+}

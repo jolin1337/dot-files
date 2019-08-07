@@ -57,6 +57,7 @@ call plug#begin('~/.config/nvim/plugged')
 
 " Appearance {{{
 	set number " show line numbers
+	set rnu " Enable relative line numbers
 	set wrap " turn on line wrapping
 	set wrapmargin=8 " wrap lines when coming within n characters from side
 	set linebreak " set soft wrapping
@@ -81,13 +82,13 @@ call plug#begin('~/.config/nvim/plugged')
 	" Tab control
 	set noexpandtab " insert tabs rather than spaces for <Tab>
 	set smarttab " tab respects 'tabstop', 'shiftwidth', and 'softtabstop'
-	set tabstop=2 " the visible width of tabs
-	set softtabstop=2 " edit as if the tabs are 4 characters wide
-	set shiftwidth=2 " number of spaces to use for indent and unindent
+	set tabstop=4 " the visible width of tabs
+	set softtabstop=4 " edit as if the tabs are 4 characters wide
+	set shiftwidth=4 " number of spaces to use for indent and unindent
 	set shiftround " round indent to a multiple of 'shiftwidth'
 
 	" code folding settings
-	set foldmethod=syntax " fold based on indent
+	set foldmethod=indent " fold based on indent
 	set foldlevelstart=99
 	set foldnestmax=10 " deepest fold is 10 levels
 	set nofoldenable " don't fold by default
@@ -191,6 +192,9 @@ call plug#begin('~/.config/nvim/plugged')
 	" enable . command in visual mode
 	vnoremap . :normal .<cr>
 
+	" Search for visually selected text
+	vnoremap <leader>/ y/\V<C-r>=escape(@",'/\')<CR><CR>
+
 	map <silent> <C-h> :call functions#WinMove('h')<cr>
 	map <silent> <C-j> :call functions#WinMove('j')<cr>
 	map <silent> <C-k> :call functions#WinMove('k')<cr>
@@ -209,6 +213,7 @@ call plug#begin('~/.config/nvim/plugged')
 	vnoremap ˚ :m '<-2<cr>gv=gv
 
 	" toggle cursor line
+	:set cursorline
 	nnoremap <leader>i :set cursorline!<cr>
 
 	" scroll the viewport faster
@@ -231,13 +236,14 @@ call plug#begin('~/.config/nvim/plugged')
 	let g:silent_custom_command = 0
 
 	" helpers for dealing with other people's code
-	nmap \t :set ts=2 sts=2 sw=2 noet<cr>
-	nmap \s :set ts=2 sts=2 sw=2 et<cr>
+	nmap \t :set ts=4 sts=4 sw=4 noet<cr>
+	nmap \s :set ts=4 sts=4 sw=4 et<cr>
 
 	nnoremap <silent> <leader>u :call functions#HtmlUnEscape()<cr>
 
 	command! Rm call functions#Delete()
 	command! RM call functions#Delete() <Bar> q!
+	command! -bar -nargs=1 Grep execute 'vimgrep <args>' | redraw! | cw
 " }}}
 
 " AutoGroups {{{
@@ -362,7 +368,8 @@ call plug#begin('~/.config/nvim/plugged')
 
 		if isdirectory(".git")
 			" if in a git project, use :GFiles
-			nmap <silent> <leader>t :GFiles --cached --others --exclude-standard<cr>
+			" nmap <silent> <leader>t :GFiles --cached --others --exclude-standard<cr>
+			nmap <silent> <leader>t :FilesP<cr>
 		else
 			" otherwise, use :FZF
 			nmap <silent> <leader>t :FZF<cr>
@@ -388,6 +395,8 @@ call plug#begin('~/.config/nvim/plugged')
 		\	'options': '+m',
 		\	'left':    30
 		\ })<CR>
+
+		command! FilesP call fzf#vim#files('', fzf#vim#with_preview('right', '?'))
 
 		command! FZFMru call fzf#run({
 		\  'source':  v:oldfiles,
@@ -429,17 +438,35 @@ call plug#begin('~/.config/nvim/plugged')
 		let g:ale_linters = {
 		\	'javascript': ['eslint'],
 		\	'typescript': ['tsserver', 'tslint'],
-		\	'html': []
+		\	'html': [],
+		\   'python': ['flake8', 'pylint']
 		\}
 	" }}}
 
 	" UltiSnips {{{
-		Plug 'SirVer/ultisnips' " Snippets plugin
-		let g:UltiSnipsExpandTrigger="<tab>"
+		" Plug 'SirVer/ultisnips' " Snippets plugin
+		" Plug 'honza/vim-snippets'
+		" let g:UltiSnipsExpandTrigger="<tab>"
 	" }}}
 " }}}
 
 " Language-Specific Configuration {{{
+		nnoremap <leader>" ciw"<c-r>""<esc>bve
+		nnoremap <leader>' ciw'<c-r>"'<esc>bve
+		nnoremap <leader>{ ciw{<c-r>"}<esc>bve
+		nnoremap <leader>[ ciw[<c-r>"]<esc>bve
+		nnoremap <leader>( ciw(<c-r>")<esc>bve
+		vnoremap <leader>" c"<c-r>""<esc>hv`[lo
+		vnoremap <leader>' c'<c-r>"'<esc>hv`[lo
+		vnoremap <leader>{ c{<c-r>"}<esc>hv`[lo
+		vnoremap <leader>[ c[<c-r>"]<esc>hv`[lo
+		vnoremap <leader>( c(<c-r>")<esc>hv`[lo
+		function! ReplaceAll(what, with)
+			:execute ":%s/\(" . a:what . "\)/" . a:with . "/g"
+		endfunction
+		function! Replace(what, with)
+			:execute ":%s/\(" . a:what . "\)/" . a:with . "/"
+		endfunction
 	" html / templates {{{
 		" emmet support for vim - easily create markdup wth CSS-like syntax
 		Plug 'mattn/emmet-vim', { 'for': ['html', 'javascript.jsx', 'eruby' ]}
@@ -523,16 +550,16 @@ call plug#end()
 " Colorscheme and final setup {{{
 	" This call must happen after the plug#end() call to ensure
 	" that the colorschemes have been loaded
+	syntax enable
+	set background=dark
 	if filereadable(expand("~/.vimrc_background"))
 		let base16colorspace=256
 		source ~/.vimrc_background
 	else
-		let g:onedark_termcolors=16
-		let g:onedark_terminal_italics=1
-		" colorscheme onedark
-		colorscheme dracula
+		" let g:onedark_termcolors=256
+		" let g:onedark_terminal_italics=1
+		colorscheme onedark
 	endif
-	syntax on
 	filetype plugin indent on
 	" make the highlighting of tabs and other non-text less annoying
 	highlight SpecialKey ctermfg=236
