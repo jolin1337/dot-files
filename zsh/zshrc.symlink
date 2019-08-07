@@ -24,6 +24,9 @@ if [[ -a ~/.localrc ]]; then
     source ~/.localrc
 fi
 
+if [[ -z $SHELL ]]; then
+    export SHELL=/bin/zsh
+fi
 
 # initialize autocomplete
 autoload -U compinit add-zsh-hook
@@ -67,7 +70,7 @@ if command_exists hub; then
     eval "$(hub alias -s)"
 fi
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -s ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules}/*" 2> /dev/null'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
@@ -82,7 +85,9 @@ if command_exists brew; then
 else
     source $ZSH/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
-source $HOME/.rvm/scripts/rvm
+[ -s ~/.rvm/scripts/rvm ] && source $HOME/.rvm/scripts/rvm
+[ -s ~/.z ] && source ~/.z > /dev/null 2>&1
+[ -s ~/.diff-so-fancy ] && echo 'perl ~/.diff-so-fancy' > /bin/diff-so-fancy && chmod +x /bin/diff-so-fancy
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

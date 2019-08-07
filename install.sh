@@ -9,6 +9,9 @@ package_manager=apt-get
 if [ "$(uname)" == "Darwin" ]; then
   package_manager=brew
 fi
+if hash sudo 2>/dev/null; then
+  package_manager="sudo $package_manager"
+fi
 
 echo "Installing dotfiles."
 
@@ -17,7 +20,7 @@ git submodule update --init --recursive
 
 echo "Installing packages"
 while read -r line; do
-  sudo $package_manager install -y $line
+  $package_manager install -y $line
 done < "install/packages.txt"
 
 source install/zsh-autocompletion.sh
@@ -30,5 +33,6 @@ fi
 
 echo "create vim directories"
 mkdir -p ~/.vim-tmp
+nvim -c ":PlugInstall" -c ":q" -c ":q"
 
 echo "Done. Reload your terminal."

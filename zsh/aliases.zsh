@@ -67,6 +67,7 @@ for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
 done
 
 alias python="python3"
+alias x11-disp="socat -d TCP-LISTEN:6000,fork UNIX-CLIENT:\"$DISPLAY\""
 
 # Kill all the tabs in Chrome to free up memory
 # [C] explained: http://www.commandlinefu.com/commands/view/402/exclude-grep-from-your-grepped-output-of-ps-alias-included-in-description

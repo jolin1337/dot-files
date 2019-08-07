@@ -356,8 +356,8 @@ call plug#begin('~/.config/nvim/plugged')
 
 	" FZF {{{
 		Plug '/usr/local/opt/fzf'
-		" Plug 'junegunn/fzf.vim', { 'dir': '~/.fzf', 'do': './install --all' }
 		Plug 'junegunn/fzf.vim'
+		Plug 'junegunn/fzf.vim', { 'dir': '~/.fzf', 'do': './install --all' }
 		let g:fzf_layout = { 'down': '~25%' }
 
 		if isdirectory(".git")

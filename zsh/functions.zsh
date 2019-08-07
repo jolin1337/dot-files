@@ -35,6 +35,11 @@ function dns-restart() {
     sudo launchctl start homebrew.mxcl.dnsmasq
 }
 
+dcleanup(){
+    docker rm -v $(docker ps --filter status=exited -q 2>/dev/null) 2>/dev/null
+    docker rmi $(docker images --filter dangling=true -q 2>/dev/null) 2>/dev/null
+}
+
 pretty() {
     pygmentize -f terminal256 $* | less -R
 }

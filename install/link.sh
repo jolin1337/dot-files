@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-DOTFILES=$HOME/Documents/dotfiles
+if [ -z $DOTFILES ]; then
+    DOTFILES=$HOME/.dotfiles
+fi
 
 echo -e "\nCreating symlinks"
 echo "=============================="
