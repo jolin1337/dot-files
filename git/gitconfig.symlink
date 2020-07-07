@@ -73,7 +73,7 @@
     assumed = "!git ls-files -v | grep ^h | cut -c 3-"
     unassumeall = "!git assumed | xargs git update-index --no-assume-unchanged"
 
-    # clean up all 
+    # clean up all
     forget = "!git fetch -p && git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -D"
 
     # show the most recently touched branches
@@ -101,7 +101,7 @@
     remotes = remote -v
 
     # check out a local copy of a PR. https://gist.github.com/gnarf/5406589
-    pr = "!f() { git fetch -fu ${2:-origin} refs/pull/$1/head:pr/$1 && git checkout pr/$1; }; f"
+    pr = "!f() { BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD); git push origin $BRANCH_NAME; hub pull-request; }; f "
     pr-clean = "!git for-each-ref refs/heads/pr/* --format='%(refname)' | while read ref ; do branch=${ref#refs/heads/} ; git branch -D $branch ; done"
 [color]
     diff = auto

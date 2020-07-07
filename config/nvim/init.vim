@@ -20,6 +20,8 @@ call plug#begin('~/.config/nvim/plugged')
 
 	set history=1000 " change history to 1000
 	set textwidth=120
+	set tags+=.proj-ctags/.tags
+	set notagrelative
 
 	set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 	set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
@@ -80,7 +82,7 @@ call plug#begin('~/.config/nvim/plugged')
 	set mat=2 " how many tenths of a second to blink
 
 	" Tab control
-	set noexpandtab " insert tabs rather than spaces for <Tab>
+	" set noexpandtab " insert tabs rather than spaces for <Tab>
 	set smarttab " tab respects 'tabstop', 'shiftwidth', and 'softtabstop'
 	set tabstop=4 " the visible width of tabs
 	set softtabstop=4 " edit as if the tabs are 4 characters wide
@@ -328,7 +330,7 @@ call plug#begin('~/.config/nvim/plugged')
 	" NERDTree {{{
 		Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
 		Plug 'Xuyuanp/nerdtree-git-plugin'
-		Plug 'ryanoasis/vim-devicons'
+		" Plug 'ryanoasis/vim-devicons'
 
 		" Toggle NERDTree
 		function! ToggleNerdTree()
@@ -344,8 +346,9 @@ call plug#begin('~/.config/nvim/plugged')
         nmap <silent> <leader>y :NERDTreeFind<cr>
 
 		let NERDTreeShowHidden=1
-		" let NERDTreeDirArrowExpandable = '▷'
-		" let NERDTreeDirArrowCollapsible = '▼'
+		let g:NERDTreeNodeDelimiter="\u00a0"
+		let NERDTreeDirArrowExpandable = '▷'
+		let NERDTreeDirArrowCollapsible = '▼'
 		let g:NERDTreeIndicatorMapCustom = {
 		\ "Modified"  : "✹",
 		\ "Staged"    : "✚",
@@ -369,7 +372,8 @@ call plug#begin('~/.config/nvim/plugged')
 		if isdirectory(".git")
 			" if in a git project, use :GFiles
 			" nmap <silent> <leader>t :GFiles --cached --others --exclude-standard<cr>
-			nmap <silent> <leader>t :FilesP<cr>
+			nmap <silent> <leader>t :FZF<cr>
+			"nmap <silent> <leader>t :FilesP<cr>
 		else
 			" otherwise, use :FZF
 			nmap <silent> <leader>t :FZF<cr>
@@ -404,9 +408,9 @@ call plug#begin('~/.config/nvim/plugged')
 		\  'options': '-m -x +s',
 		\  'down':	  '40%'})
 
-		command! -bang -nargs=* Find call fzf#vim#grep(
-			\ 'rg --column --line-number --no-heading --follow --color=always '.<q-args>, 1,
-			\ <bang>0 ? fzf#vim#with_preview('up:60%') : fzf#vim#with_preview('right:50%:hidden', '?'), <bang>0)
+		" command! -bang -nargs=* Find call fzf#vim#grep(
+		"	\ 'rg --column --line-number --no-heading --follow --color=always '.<q-args>, 1,
+		"	\ <bang>0 ? fzf#vim#with_preview('up:60%') : fzf#vim#with_preview('right:50%:hidden', '?'), <bang>0)
 	" }}}
 
 	" signify {{{

@@ -2,12 +2,13 @@
 #
 # docker run -it \
 #            -v ~/Documents/Projects:/root/Projects \
+#            -v ~/.zsh_history:/root/.zsh_history \
 #            --name dotfiles \
 #            dotfiles
 #
 FROM alpine:latest
 FROM debian:sid-slim
-WORKDIR "/"
+
 RUN mkdir /root/Projects
 WORKDIR /root/Projects
 ENV DOTFILES=/root/.dotfiles

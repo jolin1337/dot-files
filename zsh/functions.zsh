@@ -1,4 +1,4 @@
-####################
+###################
 # functions
 ####################
 
@@ -12,6 +12,11 @@ function colours() {
             printf "\t"
         fi
     done
+}
+
+# lock the screen in i3 mode
+function lock() {
+  i3lock
 }
 
 # Create a new directory and enter it
@@ -63,6 +68,11 @@ function fif() {
   regexp=$1
   base_dir=$2 # .
   find $base_dir -type f -exec grep -H $regexp {} \;
+}
+
+# Run weather <city>
+function weather() {
+  curl wttr.in/${1:-sundsvall}
 }
 
 # get gzipped size
