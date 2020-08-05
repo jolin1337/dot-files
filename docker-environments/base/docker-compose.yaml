@@ -5,7 +5,7 @@ services:
     privileged: true
     image: docker-base-environment
     build:
-      context: ../
-      dockerfile: Dockerfile
+      context: ../../
+      dockerfile: docker-environments/base/Dockerfile
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

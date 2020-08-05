@@ -9,7 +9,8 @@ RUN apt update && apt upgrade -y
 # Install neovim and build libraries for autocompletion
 RUN apt-get install -y neovim git curl python3-pip python3 \
                        build-essential cmake zsh fonts-powerline \
-                       zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libbz2-dev
+                       zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libbz2-dev 
+                       # default-jre default-jdk
 
 # Install Python 3.8
 WORKDIR /python3.8
@@ -46,7 +47,7 @@ RUN echo 'export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin' >> /home/dev/.bashrc
 
 # Setup Oh-my-Zhs
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-COPY --chown=dev:dev ./oh-my-zsh.sh oh-my-zsh.sh
+COPY --chown=dev:dev ./docker-environments/base/oh-my-zsh.sh oh-my-zsh.sh
 RUN cp /home/dev/oh-my-zsh.sh .zshrc
 WORKDIR /home/dev/.oh-my-zsh/custom/plugins
 RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting
@@ -54,7 +55,7 @@ RUN git clone https://github.com/zsh-users/zsh-autosuggestions
 
 # Setup vim
 RUN mkdir -p /home/dev/.config/nvim/bundle
-COPY --chown=dev:dev vimrc /home/dev/.config/nvim/init.vim
+COPY --chown=dev:dev ./docker-environments/base/vimrc /home/dev/.config/nvim/init.vim
 
 # Install vundle and all plugins
 RUN git clone https://github.com/VundleVim/Vundle.vim.git /home/dev/.config/nvim/bundle/Vundle.vim
@@ -66,7 +67,7 @@ RUN /bin/bash -c '. /home/dev/.bashrc; python3 install.py --clang-completer --go
 
 # Add a default YCM semantic completion for C config
 WORKDIR /home/dev
-COPY --chown=dev:dev default_ycm_extra_conf.py /home/dev/.ycm_extra_conf.py
+COPY --chown=dev:dev ./docker-environments/base/default_ycm_extra_conf.py /home/dev/.ycm_extra_conf.py
 
 # Install Prettier
 WORKDIR /home/dev/.vim/bundle/vim-prettier
