@@ -1,0 +1,5 @@
+#!/bin/bash
+
+regexp=$1
+base_dir=$2 # .
+find $base_dir -type f -exec grep -H $regexp {} \;
