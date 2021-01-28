@@ -3,7 +3,7 @@ services:
   local:
     command: zsh
     privileged: true
-    image: base-environment:v1.0
+    image: jolin1337/base-environment:v1.0
     build:
       context: ../../
       dockerfile: docker-environments/base/Dockerfile

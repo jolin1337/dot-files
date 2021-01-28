@@ -9,7 +9,7 @@ RUN apt update && apt upgrade -y
 # Install neovim and build libraries for autocompletion
 RUN apt-get install -y neovim git curl python3-pip python3 \
                        build-essential cmake zsh fonts-powerline \
-                       zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libbz2-dev 
+                       zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libbz2-dev
                        # default-jre default-jdk
 
 # Install Python 3.8
@@ -135,6 +135,7 @@ RUN echo "Europe/Stockholm" > /etc/timezone && \
     dpkg-reconfigure --frontend=noninteractive locales && \
     update-locale LANG=en_US.UTF-8
 
+COPY --chown=dev:dev ./bin/* /usr/bin/
 
 USER dev
 RUN cp /home/dev/oh-my-zsh.sh /home/dev/.zshrc
