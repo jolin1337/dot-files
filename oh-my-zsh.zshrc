@@ -109,7 +109,7 @@ fi
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias vpn='sudo openfortivpn access.bonniernews.se:443 --username=johannes.linden'
+alias vpn='sudo openfortivpn access.bonniernews.se:443 --username=johlin'
 
 
 alias gcloud-login='docker run -ti --name gcloud-config google/cloud-sdk gcloud auth login'
