@@ -111,9 +111,11 @@ fi
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias vpn='sudo openfortivpn access.bonniernews.se:443 --username=johlin'
 
-
+alias python='python3'
 alias gcloud-login='docker run -ti --name gcloud-config google/cloud-sdk gcloud auth login'
 alias gcloud='docker run --rm -ti --volumes-from gcloud-config -v $(pwd):/workdir -w /workdir google/cloud-sdk gcloud'
 alias bq='docker run --rm -ti --volumes-from gcloud-config -v $(pwd):/workdir -w /workdir google/cloud-sdk bq'
+alias gsutil='docker run --rm -ti --volumes-from gcloud-config -v $(pwd):/workdir -w /workdir google/cloud-sdk gsutil'
 alias aws='docker run --rm -ti -v ~/.aws:/root/.aws -v $(pwd):/aws -w /aws amazon/aws-cli:latest --profile bonnier-me'
 alias oc='docker run -v $HOME/data/oc-config/:/root/.kube --rm -ti openshift/origin-cli:latest oc'
+alias jq='docker run -v $(pwd):/jq -w /jq --rm -i imega/jq'
